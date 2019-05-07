@@ -6,21 +6,29 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dog API Example</title>
     <link rel="stylesheet" href="index.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="container">
         <h1>Dog API: A Simple Example</h1>
 
-        <form>
-          <input type="text" name="dogNum" class="dogNum" value="3" required>
-          <input type="submit" value="Get a dog pic!">
+        <form id="number-choice">
+          <label for="dogNum">How many dogs?</label>
+          <input type="number" name="dogNum" class="dogNum" minimum="1" maximum="50" value="3" required>
+          <label for="dog-breed">Breed:</label>
+          <select id="dog-breed-select" name="breed">
+            <option value="bulldog">bulldog</option>
+          </select>
+          <input type="submit" disabled="true" value="Go!">
         </form>
         <section class="results hidden">
+          <div class="error-message">
+
+          </div>
           <h2>Look at this dog!</h2>
           <img class="results-img" alt="placeholder">
         </section>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="index.js"></script>
 </body>
 </html>

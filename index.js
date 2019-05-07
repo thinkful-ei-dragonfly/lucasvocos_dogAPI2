@@ -1,32 +1,72 @@
 'use strict';
-
-function getDogImage(dogNum) {
-  fetch(`https://dog.ceo/api/breeds/image/random/${dogNum}`)
+const state = {
+  dogs: [],
+  error: null,
+  formReady: false
+};
+function getDogImage(dogNum, dogBreed) {
+  fetch(`https://dog.ceo/api/breed/${dogBreed}/images/random/${dogNum}`)
     .then(response => response.json())
     .then(responseJson => {
-      displayResults(responseJson)});
-    .catch(error => alert('Something went wrong. Try again later.'));
+      addDogsToState(responseJson);
+      render();
+    })
+    .catch(error => {
+      state.error = error;
+      render();
+    });
 }
 
-function displayResults(responseJson) {
-  console.log(responseJson);
-  //replace the existing image with the new one
-  $('.results-img').replaceWith(
-    `<img src="${responseJson.message}" class="results-img">`
-  );
-  //display the results section
-  $('.results').removeClass('hidden');
+function addDogsToState(dogs) {
+  state.dogs = dogs.message;
 }
 
+function render() {
+  const html = state.dogs.map(dogImg => {
+    return `
+      <li>
+        <img src="${dogImg}">
+      </li>
+    `;
+  });
+
+  if (state.error) {
+    $('.error-message').html(`<p>${state.error}</p>`)
+  } else {
+    $('.error-message').empty();
+  }
+
+  if (state.formReady === false) {
+    $('#number-choice').find('input[type=submit]').attr('disabled',true);
+  } else {
+    $('#number-choice').find('input[type=submit]').attr('disabled',false);
+  }
+  $('.results').removeClass('hidden').html(html);
+}
+
+function getBreedListAndPopulate() {
+  return fetch('https://dog.ceo/api/breeds/list/all')
+    .then(res => res.json())
+    .then(data => {
+      const breedObj = data.message;
+      const breedList = Object.keys(breedObj).map(breed => `<option value="${breed}">${breed}</option>`);
+      $('#dog-breed-select').html(breedList);
+      state.formReady = true;
+      render();
+    });
+}
 function watchForm() {
   $('form').submit(event => {
     event.preventDefault();
-    let dogNum = $('.dogNum').val();
-    getDogImage(dogNum);
+    let dogNum = event.target.dogNum.value;
+    let dogBreed = event.target.breed.value;
+    console.log(`${dogNum} + ${dogBreed}`);
+    getDogImage(dogNum, dogBreed);
   });
 }
 
 $(function() {
-  console.log('App loaded! Waiting for submit!');
   watchForm();
+  getBreedListAndPopulate();
+  render();
 });
