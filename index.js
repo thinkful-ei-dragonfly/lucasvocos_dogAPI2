@@ -8,6 +8,7 @@ function getDogImage(dogNum, dogBreed) {
   fetch(`https://dog.ceo/api/breed/${dogBreed}/images/random/${dogNum}`)
     .then(response => response.json())
     .then(responseJson => {
+      console.log(responseJson)
       addDogsToState(responseJson);
       render();
     })
