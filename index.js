@@ -16,6 +16,18 @@ function getDogImage(dogNum, dogBreed) {
       render();
     });
 }
+function getRandomdDogs(dogNum) {
+  fetch(`https://dog.ceo/api/breeds/image/random/${dogNum}`)
+    .then(response => response.json())
+    .then(responseJson => {
+      addDogsToState(responseJson);
+      render();
+    })
+    .catch(error => {
+      state.error = error;
+      render();
+    })
+}
 
 function addDogsToState(dogs) {
   state.dogs = dogs.message;
@@ -56,13 +68,19 @@ function getBreedListAndPopulate() {
     });
 }
 function watchForm() {
-  $('form').submit(event => {
+  $('#number-choice').submit(event => {
     event.preventDefault();
     let dogNum = event.target.dogNum.value;
     let dogBreed = event.target.breed.value;
     console.log(`${dogNum} + ${dogBreed}`);
     getDogImage(dogNum, dogBreed);
   });
+  $('#randomdogs').submit(event => {
+    event.preventDefault();
+    let dogNum = event.target.dogRandom.value;
+    event.preventDefault()
+    getRandomdDogs(dogNum)
+  })
 }
 
 $(function() {
