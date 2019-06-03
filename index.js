@@ -2,26 +2,32 @@
 const state = {
   dogs: [],
   error: null,
-  formReady: false
+  // formReady: false
 };
-function getDogImage(dogNum, dogBreed) {
-  fetch(`https://dog.ceo/api/breed/${dogBreed}/images/random/${dogNum}`)
-    .then(response => response.json())
-    .then(responseJson => {
-      console.log(responseJson)
-      addDogsToState(responseJson);
-      render();
-    })
-    .catch(error => {
-      state.error = error;
-      render();
-    });
-}
+// function getDogImage(dogNum, dogBreed) {
+//   fetch(`https://dog.ceo/api/breed/${dogBreed}/images/random/${dogNum}`)
+//     .then(response => response.json())
+//     .then(responseJson => {
+//       console.log(responseJson)
+//       addDogsToState(responseJson);
+//       render();
+//     })
+//     .catch(error => {
+//       state.error = error;
+//       render();
+//     });
+// }
 function getRandomdDogs(dogNum) {
   fetch(`https://dog.ceo/api/breeds/image/random/${dogNum}`)
     .then(response => response.json())
     .then(responseJson => {
       addDogsToState(responseJson);
+      let dogImgs = responseJson.message.map(link => {
+        return `Dog link: ${link}`
+      })
+      dogImgs.forEach(dog => {
+        console.log(dog)
+      })
       render();
     })
     .catch(error => {
@@ -49,33 +55,33 @@ function render() {
     $('.error-message').empty();
   }
 
-  if (state.formReady === false) {
-    $('#number-choice').find('input[type=submit]').attr('disabled',true);
-  } else {
-    $('#number-choice').find('input[type=submit]').attr('disabled',false);
-  }
+  // if (state.formReady === false) {
+  //   $('#number-choice').find('input[type=submit]').attr('disabled',true);
+  // } else {
+  //   $('#number-choice').find('input[type=submit]').attr('disabled',false);
+  // }
   $('.results').removeClass('hidden').html(html);
 }
 
-function getBreedListAndPopulate() {
-  return fetch('https://dog.ceo/api/breeds/list/all')
-    .then(res => res.json())
-    .then(data => {
-      const breedObj = data.message;
-      const breedList = Object.keys(breedObj).map(breed => `<option value="${breed}">${breed}</option>`);
-      $('#dog-breed-select').html(breedList);
-      state.formReady = true;
-      render();
-    });
-}
+// function getBreedListAndPopulate() {
+//   return fetch('https://dog.ceo/api/breeds/list/all')
+//     .then(res => res.json())
+//     .then(data => {
+//       const breedObj = data.message;
+//       const breedList = Object.keys(breedObj).map(breed => `<option value="${breed}">${breed}</option>`);
+//       $('#dog-breed-select').html(breedList);
+//       state.formReady = true;
+//       render();
+//     });
+// }
 function watchForm() {
-  $('#number-choice').submit(event => {
-    event.preventDefault();
-    let dogNum = event.target.dogNum.value;
-    let dogBreed = event.target.breed.value;
-    console.log(`${dogNum} + ${dogBreed}`);
-    getDogImage(dogNum, dogBreed);
-  });
+  // $('#number-choice').submit(event => {
+  //   event.preventDefault();
+  //   let dogNum = event.target.dogNum.value;
+  //   let dogBreed = event.target.breed.value;
+  //   console.log(`${dogNum} + ${dogBreed}`);
+  //   getDogImage(dogNum, dogBreed);
+  // });
   $('#randomdogs').submit(event => {
     event.preventDefault();
     let dogNum = event.target.dogRandom.value;
@@ -86,6 +92,6 @@ function watchForm() {
 
 $(function() {
   watchForm();
-  getBreedListAndPopulate();
+  // getBreedListAndPopulate();
   render();
 });
